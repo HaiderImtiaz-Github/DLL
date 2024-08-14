@@ -73,19 +73,72 @@ class DoublyLinkedList:
             return temp
         
     def get(self, index):
-        if index<0 and index>=self.length:
+        if index<0 or index>=self.length:
             return None
         else:
             if index < self.length/2:
                 temp = self.head
                 for _ in range(index):
                     temp = temp.next
-                return temp
             else:
                 temp = self.tail
                 for _ in range(self.length-1, index, -1):
                     temp = temp.prev
-                return temp
+            return temp
+        
+    def set_value(self, index, value):
+        temp = self.get(index)
+        if temp:
+            temp.value = value
+            return True
+        else:
+            return False
+        
+    def insert(self, index, value):
+        if index < 0 or index > self.length:  
+            return False
+        elif index == 0:  
+            self.prepend(value)
+            return True
+        elif index == self.length:  
+            self.append(value)
+            return True
+        else:
+            temp = self.get(index)  
+            new_node = Node(value)
+            new_node.next = temp
+            new_node.prev = temp.prev
+            temp.prev.next = new_node
+            temp.prev = new_node
+            return True
+
+    def remove(self, index):
+        if index < 0 or index >= self.length:
+            return None
+        
+        if index == 0:  # Remove the first node
+            return self.pop_first()
+        
+        if index == self.length - 1:  # Remove the last node
+            return self.pop()
+        
+        # Remove a node from the middle
+        temp = self.get(index)
+        
+        # Re-link the previous and next nodes
+        temp.prev.next = temp.next
+        temp.next.prev = temp.prev
+        
+        # Disconnect the node to be removed
+        temp.next = None
+        temp.prev = None
+        
+        # Decrement the length of the list
+        self.length -= 1
+        
+        # Return the removed node
+        return temp
+
 
         
         
